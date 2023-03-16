@@ -4,10 +4,11 @@ import top.hopestation.springframework.beans.PropertyValues;
 
 public class BeanDefinition {
 
+    // Java Class
     private Class beanClass;
 
+    // Java Field
     private PropertyValues propertyValues;
-
 
     public BeanDefinition(Class beanClass){
         this.beanClass = beanClass;
@@ -18,11 +19,11 @@ public class BeanDefinition {
         this.propertyValues = propertyValues!=null?propertyValues:new PropertyValues();
     }
 
-    public Class getBeanClass(){
-        return this.beanClass;
+    public Class getBeanClass() {
+        return beanClass;
     }
 
-    public void setBeanClass(Class beanClass){
-        this.beanClass = beanClass;
+    public PropertyValues getPropertyValues() {
+        return propertyValues;
     }
 }
