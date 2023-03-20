@@ -3,6 +3,11 @@ package top.hopestation.springframework.beans.factory.support;
 import top.hopestation.springframework.beans.BeansException;
 import top.hopestation.springframework.beans.factory.BeanFactory;
 import top.hopestation.springframework.beans.factory.config.BeanDefinition;
+import top.hopestation.springframework.beans.factory.config.BeanPostProcessor;
+import top.hopestation.springframework.beans.factory.config.ConfigurableBeanFactory;
+
+import java.util.ArrayList;
+import java.util.List;
 
 /***
  * 抽象Bean工厂
@@ -17,7 +22,11 @@ import top.hopestation.springframework.beans.factory.config.BeanDefinition;
  *
  *
  */
-public abstract class AbstractBeanFactory extends  DefaultSingletonBeanRegistry implements BeanFactory {
+public abstract class AbstractBeanFactory extends  DefaultSingletonBeanRegistry implements ConfigurableBeanFactory {
+
+
+    private final List<BeanPostProcessor> beanPostProcessors = new ArrayList<BeanPostProcessor>();
+
 
     @Override
     public Object getBean(String beanName) {
@@ -27,6 +36,11 @@ public abstract class AbstractBeanFactory extends  DefaultSingletonBeanRegistry 
     @Override
     public Object getBean(String beanName,Object... args) {
         return doGetBean(beanName,args);
+    }
+
+    @Override
+    public <T> T getBean(String beanName,Class<T> required) {
+        return (T)getBean(beanName);
     }
 
     protected <T> T doGetBean(final String name,final Object[] args){
@@ -43,5 +57,16 @@ public abstract class AbstractBeanFactory extends  DefaultSingletonBeanRegistry 
 
     protected abstract Object createBean(String beanName,BeanDefinition beanDefinition,Object[] args) throws BeansException;
 
+    @Override
+    public void addBeanPostProcessor(BeanPostProcessor beanPostProcessor) {
+        // TODO 放在list的尾部是为什么
+        // Remove from old position, if any
+        this.beanPostProcessors.remove(beanPostProcessor);
+        // Add to end of list
+        this.beanPostProcessors.add(beanPostProcessor);
+    }
 
+    public List<BeanPostProcessor> getBeanPostProcessors() {
+        return beanPostProcessors;
+    }
 }
